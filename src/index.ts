@@ -1,5 +1,5 @@
 import { injectFetch } from './hooks';
-import { translateAction } from './translate/action';
+import { translateAction, translateActionRich, translateItem, translateStatus } from './translate';
 import { Package } from './types';
 import { isXIVPackage } from './xivapi';
 
@@ -8,19 +8,30 @@ const processPackage = async (pkg: Package): Promise<Response> => {
 
   if (!identifier) {
     return pkg.response;
-  } else if (identifier.type === 'Action') {
-    for (let i = 0; i < identifier.rows.length; i++) {
-      identifier.rows[i] = await translateAction(identifier.rows[i]);
-    }
-    const result = {
-      ...pkg.json,
-      rows: identifier.rows,
-    };
-    return new Response(JSON.stringify(result));
   }
-
-  // fallback
-  return pkg.response;
+  const { type, rows } = identifier;
+  if (type === 'Action') {
+    for (let i = 0; i < rows.length; i++) {
+      rows[i] = await translateAction(rows[i]);
+    }
+  } else if (type === 'ActionRich') {
+    for (let i = 0; i < rows.length; i++) {
+      rows[i] = await translateActionRich(rows[i]);
+    }
+  } else if (type === 'Item') {
+    for (let i = 0; i < rows.length; i++) {
+      rows[i] = await translateItem(rows[i]);
+    }
+  } else if (type === 'Status') {
+    for (let i = 0; i < rows.length; i++) {
+      rows[i] = await translateStatus(rows[i]);
+    }
+  }
+  const result = {
+    ...pkg.json,
+    rows: rows,
+  };
+  return new Response(JSON.stringify(result));
 };
 
 injectFetch(processPackage);

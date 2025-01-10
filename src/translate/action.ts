@@ -1,5 +1,5 @@
 import { origFetch } from '../hooks';
-import { GarlandAction, GarlandActionResponse, XIVAPIObject } from '../types';
+import { GarlandAction, GarlandActionResponse, XIVAPIActionRich, XIVAPIObject } from '../types';
 
 const actionCache = new Map<number, GarlandAction>();
 
@@ -15,9 +15,17 @@ export const fetchAction = async (id: number): Promise<GarlandAction> => {
   return action;
 };
 
-export const translateAction = async (item: XIVAPIObject): Promise<XIVAPIObject> => {
-  const id = item.row_id;
+export const translateAction = async (obj: XIVAPIObject): Promise<XIVAPIObject> => {
+  const id = obj.row_id;
   const action = await fetchAction(id);
-  item.fields.Name = action.name;
-  return item;
+  obj.fields.Name = action.name;
+  return obj;
+};
+
+export const translateActionRich = async (obj: XIVAPIActionRich): Promise<XIVAPIActionRich> => {
+  const id = obj.row_id;
+  const action = await fetchAction(id);
+  obj.fields.Name = action.name;
+  obj.transient['Description@as(html)'] = action.description;
+  return obj;
 };
