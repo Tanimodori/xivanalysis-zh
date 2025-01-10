@@ -1,17 +1,29 @@
+import { Package } from './types';
+import { isXIVPackage } from './xivapi';
+
+// Hooks
 const { fetch: origFetch } = window;
-window.fetch = async (...args) => {
-  console.log('fetch called with args:', args);
-  const response = await origFetch(...args);
 
-  /* work with the cloned response in a separate promise
-     chain -- could use the same chain with `await`. */
-  response
-    .clone()
-    .json()
-    .then((data) => console.log('intercepted response data:', data))
-    .catch((err) => console.error(err));
-
-  /* the original response can be resolved unmodified: */
-  return response;
+const processPackage = async (pkg: Package): Promise<Response> => {
+  console.log(isXIVPackage(pkg));
+  return pkg.response;
 };
 
+window.fetch = async (...args) => {
+  let response = await origFetch(...args);
+
+  try {
+    const pkg = {
+      url: args[0].toString(),
+      response,
+      json: await response.clone().json(),
+    };
+
+    // process the package
+    response = await processPackage(pkg);
+  } catch (err) {
+    console.error(err);
+  }
+
+  return response;
+};
