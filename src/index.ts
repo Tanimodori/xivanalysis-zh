@@ -1,29 +1,27 @@
+import { injectFetch } from './hooks';
+import { translateAction } from './translate/action';
 import { Package } from './types';
 import { isXIVPackage } from './xivapi';
 
-// Hooks
-const { fetch: origFetch } = window;
-
 const processPackage = async (pkg: Package): Promise<Response> => {
-  console.log(isXIVPackage(pkg));
+  const identifier = isXIVPackage(pkg);
+
+  if (!identifier) {
+    return pkg.response;
+  } else if (identifier.type === 'Action') {
+    for (let i = 0; i < identifier.rows.length; i++) {
+      identifier.rows[i] = await translateAction(identifier.rows[i]);
+    }
+    const result = {
+      ...pkg.json,
+      rows: identifier.rows,
+    };
+    return new Response(JSON.stringify(result));
+  }
+
+  // fallback
   return pkg.response;
 };
 
-window.fetch = async (...args) => {
-  let response = await origFetch(...args);
+injectFetch(processPackage);
 
-  try {
-    const pkg = {
-      url: args[0].toString(),
-      response,
-      json: await response.clone().json(),
-    };
-
-    // process the package
-    response = await processPackage(pkg);
-  } catch (err) {
-    console.error(err);
-  }
-
-  return response;
-};

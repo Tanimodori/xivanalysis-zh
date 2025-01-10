@@ -1,10 +1,12 @@
 // Major types
 
-export interface Package<T = unknown> {
+export interface Package<T = object> {
   url: string;
   response: Response;
   json: T;
 }
+
+export type PackageInjector = (pkg: Package) => Promise<Response>;
 
 // Garland API types
 

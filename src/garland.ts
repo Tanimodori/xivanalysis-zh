@@ -1,7 +1,8 @@
+import { origFetch } from './hooks';
 import type { GarlandActionResponse, GarlandItemResponse, GarlandStatusResponse } from './types';
 
 // Garland CN API Schema
-const garlandSchema = {
+export const garlandSchema = {
   action: (id: string) => `https://www.garlandtools.cn/db/doc/Status/chs/2/${id}.json`,
   item: (id: string) => `https://www.garlandtools.cn/db/doc/Status/chs/3/${id}.json`,
   status: (id: string) => `https://www.garlandtools.cn/db/doc/Status/chs/2/${id}.json`,
@@ -9,17 +10,17 @@ const garlandSchema = {
 
 // Fetch Garland CN API
 export const fetchAction = async (id: string) => {
-  const response = await fetch(garlandSchema.action(id));
+  const response = await origFetch(garlandSchema.action(id));
   return response.json() as Promise<GarlandActionResponse>;
 };
 
 export const fetchItem = async (id: string) => {
-  const response = await fetch(garlandSchema.item(id));
+  const response = await origFetch(garlandSchema.item(id));
   return response.json() as Promise<GarlandItemResponse>;
 };
 
 export const fetchStatus = async (id: string) => {
-  const response = await fetch(garlandSchema.status(id));
+  const response = await origFetch(garlandSchema.status(id));
   return response.json() as Promise<GarlandStatusResponse>;
 };
 
