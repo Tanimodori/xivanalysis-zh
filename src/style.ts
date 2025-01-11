@@ -1,16 +1,33 @@
 import injectedStyle from './styles/index.css?inline';
 
+const incrementAltContainer = (container: HTMLElement, increment: number) => {
+  const alts = container.querySelectorAll('span.alternative');
+  const length = alts.length;
+  let index = parseInt(container.style.getPropertyValue('--display-nth'));
+  if (isNaN(index)) {
+    index = increment;
+  } else {
+    index = (index + increment) % length;
+  }
+  container.style.setProperty('--display-nth', index.toString());
+
+  // change the display
+  for (let i = 0; i < length; i++) {
+    const alt = alts[i];
+    if (alt instanceof HTMLElement) {
+      alt.style.display = i === index ? 'inline' : 'none';
+    }
+  }
+};
+
 const injectWindowElement = (node: HTMLElement) => {
   const observer = new MutationObserver((_mutations) => {
-    const altContainer = node.querySelector('div span.alternative-container');
-    if (altContainer) {
-      const alts = altContainer.querySelectorAll('span.alternative');
-      const alt0 = alts[0] as HTMLElement;
-      const alt1 = alts[1] as HTMLElement;
-      alt1.style.display = alt0.style.display === 'none' ? 'inline' : 'none';
+    const altContainers = node.querySelectorAll('div span.alternative-container');
+    for (const altContainer of altContainers) {
+      incrementAltContainer(altContainer as HTMLElement, 0);
     }
   });
-  observer.observe(node, { attributes: true, childList: true, subtree: true });
+  observer.observe(node, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
 
   // click
   node.addEventListener('click', (event) => {
@@ -18,12 +35,7 @@ const injectWindowElement = (node: HTMLElement) => {
     if (target instanceof HTMLElement) {
       if (target.tagName.toLowerCase() === 'span' && target.classList.contains('alternative')) {
         const container = target.parentElement as HTMLElement;
-        const alts = container.querySelectorAll('span.alternative');
-        for (const alt of alts) {
-          if (alt instanceof HTMLElement) {
-            alt.style.display = alt.style.display === 'none' ? 'inline' : 'none';
-          }
-        }
+        incrementAltContainer(container, 1);
       }
     }
   });
