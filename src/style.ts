@@ -33,12 +33,14 @@ const injectWindowElement = (node: HTMLElement) => {
 
   // click
   node.addEventListener('click', (event) => {
-    const target = event.target;
-    if (target instanceof HTMLElement) {
+    let target = event.target;
+    while (target instanceof HTMLElement) {
       if (target.tagName.toLowerCase() === 'span' && target.classList.contains('alternative')) {
         const container = target.parentElement as HTMLElement;
         incrementAltContainer(container, 1);
+        break;
       }
+      target = target.parentElement;
     }
   });
 };
