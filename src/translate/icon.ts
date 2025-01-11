@@ -2,6 +2,7 @@ import { fetchAction } from './action';
 import { fetchItem } from './item';
 import { fetchSearch } from './search';
 import { fetchStatus } from './status';
+import { translateTimeline } from './timeline';
 
 export const iconCache = new Map<number, string>();
 
@@ -40,7 +41,8 @@ export const fetchIcon = async (url: string, name: string) => {
     }
   }
 
-  return;
+  // fallback to search name
+  return translateTimeline(name);
 };
 
 export const translateIcon = async (element: HTMLImageElement): Promise<void> => {
