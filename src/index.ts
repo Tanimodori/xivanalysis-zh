@@ -19,30 +19,34 @@ const processPackage = async (pkg: Package): Promise<Response> => {
     return pkg.response;
   }
   const { type, rows } = identifier;
+
+  const saveMap = <T>(source: T[], fn: (obj: T) => Promise<T>): Promise<T[]> => {
+    const saveFn = (obj: T): Promise<T> => {
+      try {
+        return fn(obj);
+      } catch (e) {
+        console.error(e);
+        return Promise.resolve(obj);
+      }
+    };
+    return Promise.all(source.map(saveFn));
+  };
+
+  let newRows;
   if (type === 'Action') {
-    for (let i = 0; i < rows.length; i++) {
-      rows[i] = await translateAction(rows[i]);
-    }
+    newRows = await saveMap(rows, translateAction);
   } else if (type === 'ActionRich') {
-    for (let i = 0; i < rows.length; i++) {
-      rows[i] = await translateActionRich(rows[i]);
-    }
+    newRows = await saveMap(rows, translateActionRich);
   } else if (type === 'Addon') {
-    for (let i = 0; i < rows.length; i++) {
-      rows[i] = await translateAddon(rows[i]);
-    }
+    newRows = await saveMap(rows, translateAddon);
   } else if (type === 'Item') {
-    for (let i = 0; i < rows.length; i++) {
-      rows[i] = await translateItem(rows[i]);
-    }
+    newRows = await saveMap(rows, translateItem);
   } else if (type === 'Status') {
-    for (let i = 0; i < rows.length; i++) {
-      rows[i] = await translateStatus(rows[i]);
-    }
+    newRows = await saveMap(rows, translateStatus);
   }
   const result = {
     ...pkg.json,
-    rows: rows,
+    rows: newRows,
   };
   return new Response(JSON.stringify(result));
 };
@@ -50,5 +54,5 @@ const processPackage = async (pkg: Package): Promise<Response> => {
 injectFetch(processPackage);
 injectStyle();
 injectTimeline();
-injectIcon();
 
+injectIcon();
