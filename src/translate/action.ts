@@ -1,20 +1,15 @@
 import { origFetch } from '../hooks';
 import type { GarlandAction, GarlandActionResponse, XIVAPIActionRich, XIVAPIObject } from '../types';
 import { actionCatagoryPolyfill, classJobCategoryPolyfill, classJobPolyfill } from './constants';
+import { useCache } from './useCache';
 
-export const actionCache = new Map<number, GarlandAction>();
-
-export const fetchAction = async (id: number): Promise<GarlandAction> => {
-  if (actionCache.has(id)) {
-    return actionCache.get(id) as GarlandAction;
-  }
-
+const _fetchAction = async (id: number): Promise<GarlandAction> => {
   const response = await origFetch(`https://www.garlandtools.cn/db/doc/Action/chs/2/${id}.json`);
   const { action } = (await response.json()) as GarlandActionResponse;
-
-  actionCache.set(id, action);
   return action;
 };
+
+export const { fetch: fetchAction, cache: actionCache } = useCache(_fetchAction);
 
 export const translateAction = async (obj: XIVAPIObject): Promise<XIVAPIObject> => {
   const id = obj.row_id;

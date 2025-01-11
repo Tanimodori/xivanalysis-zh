@@ -2,23 +2,9 @@ import { fetchAction } from './action';
 import { fetchItem } from './item';
 import { fetchSearch } from './search';
 import { fetchStatus } from './status';
+import { useCache } from './useCache';
 
-export const timelineCache = new Map<string, string>([
-  // originally translated
-  ['资源', '资源'],
-  ['职业量谱', '职业量谱'],
-  ['触发', '触发'],
-  // terms
-  ['Raid Buffs', '团辅'],
-  ['Arcanum', '奥秘卡'],
-  ['GCD', 'GCD'],
-]);
-
-export const fetchTimeline = async (text: string): Promise<string> => {
-  if (timelineCache.has(text)) {
-    return timelineCache.get(text) as string;
-  }
-
+const _fetchTimeline = async (text: string): Promise<string> => {
   let items = await fetchSearch(text);
   items = items.filter((item) => {
     // exact match
@@ -70,6 +56,22 @@ export const fetchTimeline = async (text: string): Promise<string> => {
 
   return translation;
 };
+
+export const { fetch: fetchTimeline, cache: timelineCache } = useCache(_fetchTimeline);
+
+const timelineCacheInitials = [
+  // originally translated
+  ['资源', '资源'],
+  ['职业量谱', '职业量谱'],
+  ['触发', '触发'],
+  // terms
+  ['Raid Buffs', '团辅'],
+  ['Arcanum', '奥秘卡'],
+  ['GCD', 'GCD'],
+];
+timelineCacheInitials.forEach(([text, translation]) => {
+  timelineCache.set(text, Promise.resolve(translation));
+});
 
 export const translateTimeline = async (text: string): Promise<string> => {
   return fetchTimeline(text);

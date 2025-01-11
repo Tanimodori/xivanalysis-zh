@@ -1,19 +1,14 @@
 import { origFetch } from '../hooks';
 import { GarlandItem, GarlandItemResponse, XIVAPIObject } from '../types';
+import { useCache } from './useCache';
 
-export const itemCache = new Map<number, GarlandItem>();
-
-export const fetchItem = async (id: number): Promise<GarlandItem> => {
-  if (itemCache.has(id)) {
-    return itemCache.get(id) as GarlandItem;
-  }
-
+export const _fetchItem = async (id: number): Promise<GarlandItem> => {
   const response = await origFetch(`https://www.garlandtools.cn/db/doc/Item/chs/3/${id}.json`);
   const { item } = (await response.json()) as GarlandItemResponse;
-
-  itemCache.set(id, item);
   return item;
 };
+
+export const { fetch: fetchItem, cache: itemCache } = useCache(_fetchItem);
 
 export const translateItem = async (obj: XIVAPIObject): Promise<XIVAPIObject> => {
   const id = obj.row_id;

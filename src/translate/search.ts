@@ -1,17 +1,13 @@
 import { origFetch } from '../hooks';
 import { GarlandSearchItem } from '../types';
+import { useCache } from './useCache';
 
-export const searchCache = new Map<string, GarlandSearchItem[]>();
-export const fetchSearch = async (text: string): Promise<GarlandSearchItem[]> => {
-  if (searchCache.has(text)) {
-    return searchCache.get(text) as GarlandSearchItem[];
-  }
-
+export const _fetchSearch = async (text: string): Promise<GarlandSearchItem[]> => {
   const response = await origFetch(
     `https://www.garlandtools.org/api/search.php?text=${encodeURIComponent(text)}&lang=en`,
   );
   const items = (await response.json()) as GarlandSearchItem[];
-
-  searchCache.set(text, items);
   return items;
 };
+
+export const { fetch: fetchSearch, cache: searchCache } = useCache(_fetchSearch);
