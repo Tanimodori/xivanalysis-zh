@@ -204,6 +204,7 @@ export interface XIVAPIObject {
       path_hr1: string;
     };
     Name: string;
+    'Description@as(html)'?: string;
   };
 }
 
