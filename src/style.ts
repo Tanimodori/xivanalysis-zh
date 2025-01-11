@@ -21,12 +21,14 @@ const incrementAltContainer = (container: HTMLElement, increment: number) => {
 };
 
 const injectWindowElement = (node: HTMLElement) => {
-  const observer = new MutationObserver((_mutations) => {
+  const applyToContainers = () => {
     const altContainers = node.querySelectorAll('div span.alternative-container');
     for (const altContainer of altContainers) {
       incrementAltContainer(altContainer as HTMLElement, 0);
     }
-  });
+  };
+  applyToContainers();
+  const observer = new MutationObserver(applyToContainers);
   observer.observe(node, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
 
   // click
@@ -60,8 +62,7 @@ const injectWindow = () => {
         }
       });
     });
-
-    observer.observe(document.body, { childList: true, subtree: false });
+    observer.observe(document.body, { attributes: true, childList: true, subtree: false });
   });
 };
 
