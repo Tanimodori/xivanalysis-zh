@@ -1,6 +1,5 @@
 import { origFetch } from '../hooks';
 import { GarlandItem, GarlandItemResponse, XIVAPIObject } from '../types';
-import { translateTimelineNodes } from './timeline';
 
 export const itemCache = new Map<number, GarlandItem>();
 
@@ -13,7 +12,6 @@ export const fetchItem = async (id: number): Promise<GarlandItem> => {
   const { item } = (await response.json()) as GarlandItemResponse;
 
   itemCache.set(id, item);
-  translateTimelineNodes();
   return item;
 };
 

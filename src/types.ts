@@ -171,6 +171,19 @@ export interface GarlandStatusResponse {
   status: GarlandStatus;
 }
 
+export interface GarlandSearchItem {
+  id: number;
+  type: string;
+  obj: {
+    i: number;
+    n: string;
+    c: number;
+    j?: number | null;
+    t: number;
+    l: number;
+  };
+}
+
 // XIVAPI types
 
 export interface XIVAPIResponse<T> {

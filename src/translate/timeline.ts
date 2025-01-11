@@ -1,33 +1,83 @@
-import { actionCache } from './action';
-import { itemCache } from './item';
-import { statusCache } from './status';
+import { origFetch } from '../hooks';
+import { GarlandSearchItem } from '../types';
+import { fetchAction } from './action';
+import { fetchItem } from './item';
+import { fetchStatus } from './status';
 
-export const timelineCache = new Map<string, HTMLElement>();
+export const timelineCache = new Map<string, string>([
+  // originally translated
+  ['资源', '资源'],
+  ['职业量谱', '职业量谱'],
+  ['触发', '触发'],
+  // terms
+  ['Raid Buffs', '团辅'],
+  ['Arcanum', '奥秘卡'],
+  ['GCD', 'GCD'],
+]);
 
-export const translateTimeline = async (text: string): Promise<string> => {
-  for (const v of actionCache.values()) {
-    if (v.en.name === text) {
-      return v.name;
+export const fetchTimeline = async (text: string): Promise<string> => {
+  if (timelineCache.has(text)) {
+    return timelineCache.get(text) as string;
+  }
+
+  const response = await origFetch(
+    `https://www.garlandtools.org/api/search.php?text=${encodeURIComponent(text)}&lang=en`,
+  );
+  let items = (await response.json()) as GarlandSearchItem[];
+
+  items = items.filter((item) => {
+    // exact match
+    if (item.obj.n !== text) {
+      return false;
+    }
+    // only action, status, item
+    if (item.type !== 'action' && item.type !== 'status' && item.type !== 'item') {
+      return false;
+    }
+    return true;
+  });
+
+  const translations = new Map<string, number>();
+
+  // count translations
+  for (const item of items) {
+    try {
+      let translatedText;
+      if (item.type === 'action') {
+        // action
+        const result = await fetchAction(item.id);
+        translatedText = result.name;
+      } else if (item.type === 'status') {
+        // status
+        const result = await fetchStatus(item.id);
+        translatedText = result.name;
+      } else {
+        // item
+        const result = await fetchItem(item.id);
+        translatedText = result.name;
+      }
+      const count = translations.get(translatedText) || 0;
+      translations.set(translatedText, count + 1);
+    } catch (e) {
+      console.error(e);
     }
   }
-  for (const v of statusCache.values()) {
-    if (v.en.name === text) {
-      return v.name;
+
+  // get most common translation
+  let maxCount = 0;
+  let translation = text;
+  for (const [key, value] of translations.entries()) {
+    if (value > maxCount) {
+      maxCount = value;
+      translation = key;
     }
   }
-  for (const v of itemCache.values()) {
-    if (v.en.name === text) {
-      return v.name;
-    }
-  }
-  return text;
+
+  return translation;
 };
 
-export const translateTimelineNodes = async () => {
-  for (const [text, node] of timelineCache.entries()) {
-    const translated = await translateTimeline(text);
-    node.textContent = translated;
-  }
+export const translateTimeline = async (text: string): Promise<string> => {
+  return fetchTimeline(text);
 };
 
 export const injectTimeline = () => {
@@ -54,7 +104,9 @@ export const injectTimeline = () => {
     for (const node of found) {
       const text = node.textContent;
       if (text) {
-        timelineCache.set(text, node as HTMLElement);
+        fetchTimeline(text).then((translation) => {
+          node.textContent = translation;
+        });
       }
     }
   });

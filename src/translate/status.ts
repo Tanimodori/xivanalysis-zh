@@ -1,6 +1,5 @@
 import { origFetch } from '../hooks';
 import { GarlandStatus, GarlandStatusResponse, XIVAPIObject } from '../types';
-import { translateTimelineNodes } from './timeline';
 
 export const statusCache = new Map<number, GarlandStatus>();
 
@@ -13,7 +12,6 @@ export const fetchStatus = async (id: number): Promise<GarlandStatus> => {
   const { status } = (await response.json()) as GarlandStatusResponse;
 
   statusCache.set(id, status);
-  translateTimelineNodes();
   return status;
 };
 

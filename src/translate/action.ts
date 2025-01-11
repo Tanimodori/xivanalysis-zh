@@ -1,7 +1,6 @@
 import { origFetch } from '../hooks';
 import type { GarlandAction, GarlandActionResponse, XIVAPIActionRich, XIVAPIObject } from '../types';
 import { actionCatagoryPolyfill, classJobCategoryPolyfill, classJobPolyfill } from './constants';
-import { translateTimelineNodes } from './timeline';
 
 export const actionCache = new Map<number, GarlandAction>();
 
@@ -14,8 +13,6 @@ export const fetchAction = async (id: number): Promise<GarlandAction> => {
   const { action } = (await response.json()) as GarlandActionResponse;
 
   actionCache.set(id, action);
-
-  translateTimelineNodes();
   return action;
 };
 
