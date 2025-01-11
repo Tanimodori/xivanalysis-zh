@@ -1,5 +1,6 @@
 import { injectFetch } from './hooks';
-import { translateAction, translateActionRich, translateItem, translateStatus } from './translate';
+import { injectStyle } from './style';
+import { translateAction, translateActionRich, translateAddon, translateItem, translateStatus } from './translate';
 import { Package } from './types';
 import { isXIVPackage } from './xivapi';
 
@@ -18,6 +19,10 @@ const processPackage = async (pkg: Package): Promise<Response> => {
     for (let i = 0; i < rows.length; i++) {
       rows[i] = await translateActionRich(rows[i]);
     }
+  } else if (type === 'Addon') {
+    for (let i = 0; i < rows.length; i++) {
+      rows[i] = await translateAddon(rows[i]);
+    }
   } else if (type === 'Item') {
     for (let i = 0; i < rows.length; i++) {
       rows[i] = await translateItem(rows[i]);
@@ -31,8 +36,9 @@ const processPackage = async (pkg: Package): Promise<Response> => {
     ...pkg.json,
     rows: rows,
   };
+  console.log(result);
   return new Response(JSON.stringify(result));
 };
 
 injectFetch(processPackage);
-
+injectStyle();
