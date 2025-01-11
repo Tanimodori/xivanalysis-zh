@@ -4,7 +4,7 @@ Display actions and status of xivanalysis report in Chinese.
 
 ![TS100%](https://badgen.net/badge/TypeScript/100%25/3178C6?icon=typescript)
 
-Install this scirpt at [GreasyFork](https://greasyfork.org/).
+Install this scirpt at [GreasyFork](https://greasyfork.org/zh-CN/scripts/523443-xivanalysis-zh).
 
 ## develop
 
