@@ -1,7 +1,6 @@
-import { origFetch } from '../hooks';
-import { GarlandSearchItem } from '../types';
 import { fetchAction } from './action';
 import { fetchItem } from './item';
+import { fetchSearch } from './search';
 import { fetchStatus } from './status';
 
 export const timelineCache = new Map<string, string>([
@@ -20,11 +19,7 @@ export const fetchTimeline = async (text: string): Promise<string> => {
     return timelineCache.get(text) as string;
   }
 
-  const response = await origFetch(
-    `https://www.garlandtools.org/api/search.php?text=${encodeURIComponent(text)}&lang=en`,
-  );
-  let items = (await response.json()) as GarlandSearchItem[];
-
+  let items = await fetchSearch(text);
   items = items.filter((item) => {
     // exact match
     if (item.obj.n !== text) {

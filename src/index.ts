@@ -1,6 +1,7 @@
 import { injectFetch } from './hooks';
 import { injectStyle } from './style';
 import {
+  injectIcon,
   injectTimeline,
   translateAction,
   translateActionRich,
@@ -49,3 +50,5 @@ const processPackage = async (pkg: Package): Promise<Response> => {
 injectFetch(processPackage);
 injectStyle();
 injectTimeline();
+injectIcon();
+
