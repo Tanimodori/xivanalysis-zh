@@ -1,6 +1,13 @@
 import { injectFetch } from './hooks';
 import { injectStyle } from './style';
-import { translateAction, translateActionRich, translateAddon, translateItem, translateStatus } from './translate';
+import {
+  injectTimeline,
+  translateAction,
+  translateActionRich,
+  translateAddon,
+  translateItem,
+  translateStatus,
+} from './translate';
 import { Package } from './types';
 import { isXIVPackage } from './xivapi';
 
@@ -40,6 +47,5 @@ const processPackage = async (pkg: Package): Promise<Response> => {
 };
 
 injectFetch(processPackage);
-
 injectStyle();
-
+injectTimeline();
