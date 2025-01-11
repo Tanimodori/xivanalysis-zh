@@ -14,5 +14,6 @@ export const translateItem = async (obj: XIVAPIObject): Promise<XIVAPIObject> =>
   const id = obj.row_id;
   const item = await fetchItem(id);
   obj.fields.Name = item.name;
+  obj.fields['Description@as(html)'] = item.description;
   return obj;
 };
