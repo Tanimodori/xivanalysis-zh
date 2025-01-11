@@ -1,5 +1,6 @@
 import { origFetch } from '../hooks';
-import { GarlandAction, GarlandActionResponse, XIVAPIActionRich, XIVAPIObject } from '../types';
+import type { GarlandAction, GarlandActionResponse, XIVAPIActionRich, XIVAPIObject } from '../types';
+import { actionCatagoryPolyfill, classJobCategoryPolyfill, classJobPolyfill } from './constants';
 
 const actionCache = new Map<number, GarlandAction>();
 
@@ -26,6 +27,9 @@ export const translateActionRich = async (obj: XIVAPIActionRich): Promise<XIVAPI
   const id = obj.row_id;
   const action = await fetchAction(id);
   obj.fields.Name = action.name;
+  obj.fields.ClassJob.fields.Abbreviation = classJobPolyfill[obj.fields.ClassJob.row_id][0];
+  obj.fields.ClassJobCategory.fields.Name = classJobCategoryPolyfill[obj.fields.ClassJobCategory.row_id];
+  obj.fields.ActionCategory.fields.Name = actionCatagoryPolyfill[obj.fields.ActionCategory.row_id];
   obj.transient['Description@as(html)'] = action.description;
   return obj;
 };

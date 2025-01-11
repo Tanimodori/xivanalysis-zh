@@ -36,9 +36,10 @@ const processPackage = async (pkg: Package): Promise<Response> => {
     ...pkg.json,
     rows: rows,
   };
-  console.log(result);
   return new Response(JSON.stringify(result));
 };
 
 injectFetch(processPackage);
+
 injectStyle();
+
