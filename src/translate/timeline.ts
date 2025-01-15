@@ -85,6 +85,12 @@ const timelineCacheInitials = [
   // Confession/告解
   // https://garlandtools.org/db/#status/1219
   ['Confession', '告解'],
+  // == SCH ==
+  ['Autos', '自动技能'],
+  ['Commands', '手动技能'],
+  // Expedience/疾风之计
+  // https://garlandtools.org/db/#status/2712
+  ['Expedience', '疾风之计'],
   // == DRK ==
   ['Esteem', '英雄的掠影'],
 ];
