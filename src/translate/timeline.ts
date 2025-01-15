@@ -66,9 +66,9 @@ const timelineCacheInitials = [
   ['触发', '触发'],
   // terms
   ['Raid Buffs', '团辅'],
-  ['Arcanum', '奥秘卡'],
   ['GCD', 'GCD'],
   // == AST ==
+  ['Arcanum', '奥秘卡'],
   // Neutral Sect/中间学派
   // https://garlandtools.org/db/#status/1892
   ['Neutral Sect (Healing Potency)', '中间学派（治疗增益）'],
@@ -93,6 +93,21 @@ const timelineCacheInitials = [
   ['Expedience', '疾风之计'],
   // == DRK ==
   ['Esteem', '英雄的掠影'],
+  // == DRG ==
+  // Enhanced Piercing Talon/???(未实装)
+  // https://www.garlandtools.org/db/#status/1870
+  // == SMN ==
+  // "Energy Drain/Siphon"/"能量吸收/抽取"
+  // https://garlandtools.cn/db/#action/16508
+  // https://garlandtools.cn/db/#action/16510
+  ['Energy Drain/Siphon', '能量吸收/抽取'],
+  ['Demi', '亚灵神'],
+  // == BLM ==
+  ['Ley Lines Buffs', '黑魔纹增益'],
+  // == SAM ==
+  // Tengentsu/天眼通 (misspelled)
+  // https://www.garlandtools.org/db/#status/3853
+  ['Tengetsu', '天眼通'],
 ];
 timelineCacheInitials.forEach(([text, translation]) => {
   timelineCache.set(text, Promise.resolve(translation));
