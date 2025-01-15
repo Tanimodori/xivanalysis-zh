@@ -101,7 +101,12 @@ const timelineCacheInitials = [
   // https://garlandtools.cn/db/#action/16508
   // https://garlandtools.cn/db/#action/16510
   ['Energy Drain/Siphon', '能量吸收/抽取'],
+  // Crimson Strike Ready/???(未实装)
+  // https://www.garlandtools.org/db/#status/4400
+  ['Pet', '召唤兽'],
   ['Demi', '亚灵神'],
+  // == BRD ==
+  ['Songs', '战歌'],
   // == BLM ==
   ['Ley Lines Buffs', '黑魔纹增益'],
   // == SAM ==
