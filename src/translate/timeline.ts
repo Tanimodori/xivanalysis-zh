@@ -8,7 +8,7 @@ const _fetchTimeline = async (text: string): Promise<string> => {
   let items = await fetchSearch(text);
   items = items.filter((item) => {
     // exact match
-    if (item.obj.n !== text) {
+    if (item.obj.n.toLowerCase() !== text.toLowerCase()) {
       return false;
     }
     // only action, status, item
@@ -110,7 +110,7 @@ export const injectTimeline = () => {
             } else {
               const children = node.querySelectorAll(selector);
               for (const child of children) {
-                if(child instanceof HTMLElement){
+                if (child instanceof HTMLElement) {
                   found.push(child);
                 }
               }
