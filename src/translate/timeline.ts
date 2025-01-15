@@ -91,7 +91,9 @@ export const injectTimeline = () => {
             } else {
               const children = node.querySelectorAll(selector);
               for (const child of children) {
-                found.push(child);
+                if(child instanceof HTMLElement){
+                  found.push(child);
+                }
               }
             }
           }
@@ -99,6 +101,11 @@ export const injectTimeline = () => {
       }
     }
     for (const node of found) {
+      const gridColumnStart = node.parentElement?.style.gridColumnStart;
+      if (gridColumnStart === '-3') {
+        // skip 3rd column as it used to be username and enemy names
+        continue;
+      }
       const text = node.textContent;
       if (text) {
         fetchTimeline(text).then((translation) => {
