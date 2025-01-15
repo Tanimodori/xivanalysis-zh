@@ -69,16 +69,24 @@ const timelineCacheInitials = [
   ['Arcanum', '奥秘卡'],
   ['GCD', 'GCD'],
   // == AST ==
-  // Neutral Sect/中间学派 -- https://garlandtools.org/db/#status/1892
+  // Neutral Sect/中间学派
+  // https://garlandtools.org/db/#status/1892
   ['Neutral Sect (Healing Potency)', '中间学派（治疗增益）'],
-  // Neutral Sect/中间学派 -- https://garlandtools.org/db/#status/1921
+  // Neutral Sect/中间学派
+  // https://garlandtools.org/db/#status/1921
   ['Neutral Sect (Barrier)', '中间学派（血盾）'],
-  // Wheel of Fortune/命运之轮 -- https://garlandtools.org/db/#status/1206
+  // Wheel of Fortune/命运之轮
+  // https://garlandtools.org/db/#status/1206
   ['Wheel Of Fortune', '命运之轮（HoT）'],
-  // Collective Unconscious (Mitigation)/命运之轮 -- https://garlandtools.org/db/#status/849
+  // Collective Unconscious (Mitigation)/命运之轮
+  // https://garlandtools.org/db/#status/849
   ['Collective Unconscious (Mitigation)', '命运之轮（减伤）'],
+  // == WHM ==
+  // Confession/告解
+  // https://garlandtools.org/db/#status/1219
+  ['Confession', '告解'],
   // == DRK ==
-  ['Esteem', '英雄的掠影']
+  ['Esteem', '英雄的掠影'],
 ];
 timelineCacheInitials.forEach(([text, translation]) => {
   timelineCache.set(text, Promise.resolve(translation));
