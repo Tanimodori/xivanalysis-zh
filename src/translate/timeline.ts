@@ -70,32 +70,32 @@ const timelineCacheInitials = [
   // == AST ==
   ['Arcanum', '奥秘卡'],
   // Neutral Sect/中间学派
-  // https://garlandtools.org/db/#status/1892
+  // https://garlandtools.cn/db/#status/1892
   ['Neutral Sect (Healing Potency)', '中间学派（治疗增益）'],
   // Neutral Sect/中间学派
-  // https://garlandtools.org/db/#status/1921
+  // https://garlandtools.cn/db/#status/1921
   ['Neutral Sect (Barrier)', '中间学派（血盾）'],
   // Wheel of Fortune/命运之轮
-  // https://garlandtools.org/db/#status/1206
+  // https://garlandtools.cn/db/#status/1206
   ['Wheel Of Fortune', '命运之轮（HoT）'],
   // Collective Unconscious (Mitigation)/命运之轮
-  // https://garlandtools.org/db/#status/849
+  // https://garlandtools.cn/db/#status/849
   ['Collective Unconscious (Mitigation)', '命运之轮（减伤）'],
   // == WHM ==
   // Confession/告解
-  // https://garlandtools.org/db/#status/1219
+  // https://garlandtools.cn/db/#status/1219
   ['Confession', '告解'],
   // == SCH ==
   ['Autos', '自动技能'],
   ['Commands', '手动技能'],
   // Expedience/疾风之计
-  // https://garlandtools.org/db/#status/2712
+  // https://garlandtools.cn/db/#status/2712
   ['Expedience', '疾风之计'],
   // == DRK ==
   ['Esteem', '英雄的掠影'],
   // == DRG ==
   // Enhanced Piercing Talon/???(未实装)
-  // https://www.garlandtools.org/db/#status/1870
+  // https://www.garlandtools.cn/db/#status/1870
   // == SMN ==
   // "Energy Drain/Siphon"/"能量吸收/抽取"
   // https://garlandtools.cn/db/#action/16508
@@ -111,7 +111,7 @@ const timelineCacheInitials = [
   ['Ley Lines Buffs', '黑魔纹增益'],
   // == SAM ==
   // Tengentsu/天眼通 (misspelled)
-  // https://www.garlandtools.org/db/#status/3853
+  // https://www.garlandtools.cn/db/#status/3853
   ['Tengetsu', '天眼通'],
 ];
 timelineCacheInitials.forEach(([text, translation]) => {
