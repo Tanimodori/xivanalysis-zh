@@ -20,8 +20,8 @@ const processPackage = async (pkg: Package): Promise<Response> => {
   }
   const { type, rows } = identifier;
 
-  const saveMap = <T>(source: T[], fn: (obj: T) => Promise<T>): Promise<T[]> => {
-    const saveFn = (obj: T): Promise<T> => {
+  const safeMap = <T>(source: T[], fn: (obj: T) => Promise<T>): Promise<T[]> => {
+    const safeFn = (obj: T): Promise<T> => {
       try {
         return fn(obj);
       } catch (e) {
@@ -29,20 +29,20 @@ const processPackage = async (pkg: Package): Promise<Response> => {
         return Promise.resolve(obj);
       }
     };
-    return Promise.all(source.map(saveFn));
+    return Promise.all(source.map(safeFn));
   };
 
   let newRows;
   if (type === 'Action') {
-    newRows = await saveMap(rows, translateAction);
+    newRows = await safeMap(rows, translateAction);
   } else if (type === 'ActionRich') {
-    newRows = await saveMap(rows, translateActionRich);
+    newRows = await safeMap(rows, translateActionRich);
   } else if (type === 'Addon') {
-    newRows = await saveMap(rows, translateAddon);
+    newRows = await safeMap(rows, translateAddon);
   } else if (type === 'Item') {
-    newRows = await saveMap(rows, translateItem);
+    newRows = await safeMap(rows, translateItem);
   } else if (type === 'Status') {
-    newRows = await saveMap(rows, translateStatus);
+    newRows = await safeMap(rows, translateStatus);
   }
   const result = {
     ...pkg.json,
@@ -56,3 +56,4 @@ injectStyle();
 injectTimeline();
 
 injectIcon();
+
