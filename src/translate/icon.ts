@@ -49,8 +49,12 @@ export const translateIcon = async (element: HTMLImageElement): Promise<void> =>
   const name = element.alt;
   const translated = await fetchIcon(element.src, name);
   if (translated) {
-    element.alt = translated;
-    element.title = translated;
+    if (typeof translated === 'function') {
+      translated(element);
+    } else {
+      element.alt = translated;
+      element.title = translated;
+    }
   }
 };
 

@@ -4,7 +4,10 @@ import { fetchSearch } from './search';
 import { fetchStatus } from './status';
 import { useCache } from './useCache';
 
-const _fetchTimeline = async (text: string): Promise<string> => {
+export type ElementModifier = (el: HTMLElement) => void;
+export type TimelineTranslation = string | ElementModifier;
+
+const _fetchTimeline = async (text: string): Promise<TimelineTranslation> => {
   let items = await fetchSearch(text);
   items = items.filter((item) => {
     // exact match
@@ -59,7 +62,14 @@ const _fetchTimeline = async (text: string): Promise<string> => {
 
 export const { fetch: fetchTimeline, cache: timelineCache } = useCache(_fetchTimeline);
 
-const timelineCacheInitials = [
+const blmAFUI = (el: HTMLElement): void => {
+  el.innerHTML = '';
+  el.appendChild(document.createTextNode('星极火和'));
+  el.appendChild(document.createElement('br'));
+  el.appendChild(document.createTextNode('灵极冰'));
+};
+
+const timelineCacheInitials: Array<[string, TimelineTranslation]> = [
   // originally translated
   ['资源', '资源'],
   ['职业量谱', '职业量谱'],
@@ -109,6 +119,7 @@ const timelineCacheInitials = [
   ['Songs', '战歌'],
   // == BLM ==
   ['Ley Lines Buffs', '黑魔纹增益'],
+  ['Astral Fire andUmbral Ice', blmAFUI],
   // == SAM ==
   // Tengentsu/天眼通 (misspelled)
   // https://www.garlandtools.cn/db/#status/3853
@@ -118,7 +129,7 @@ timelineCacheInitials.forEach(([text, translation]) => {
   timelineCache.set(text, Promise.resolve(translation));
 });
 
-export const translateTimeline = async (text: string): Promise<string> => {
+export const translateTimeline = async (text: string): Promise<TimelineTranslation> => {
   return fetchTimeline(text);
 };
 
@@ -154,7 +165,11 @@ export const injectTimeline = () => {
       const text = node.textContent;
       if (text) {
         fetchTimeline(text).then((translation) => {
-          node.textContent = translation;
+          if (typeof translation === 'function') {
+            translation(node);
+          } else {
+            node.textContent = translation;
+          }
         });
       }
     }
